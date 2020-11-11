@@ -29,6 +29,12 @@ void EXTI1_IRQHandler(void){
 	g_Keypad.keystates[KeyStartStop] = Clicked;
 }
 
-KeyState Keypad_GetState(Keypad* keypad, KeyButtons key) { return Unpressed; }
+KeyState Keypad_GetState(Keypad* keypad, KeyButtons key) { 
+	if (keypad->keystates[key] == Clicked) {
+		keypad->keystates[key] = Unpressed;
+		return Clicked;
+	}
+	return Unpressed;
+}
 
 /// @}
