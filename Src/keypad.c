@@ -21,7 +21,7 @@ Keypad* Keypad_Init() {
   gpio.Pull = GPIO_PULLUP;
   gpio.Speed = GPIO_SPEED_LOW;
   HAL_GPIO_Init(GPIOC, &gpio);
-	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
   return &g_Keypad;
 }
 
