@@ -7,7 +7,7 @@
 
 struct Keypad {
   KeyState keystates[KeyButtons_SIZE];
-  uint8_t timePressed[KeyButtons_SIZE];
+  uint32_t timePressed[KeyButtons_SIZE];
 };
 
 Keypad g_Keypad;
@@ -27,12 +27,14 @@ Keypad* Keypad_Init() {
 
 void EXTI1_IRQHandler(void){
 	EXTI->PR = EXTI_PR_PR1;
-	g_Keypad.keystates[KeyStartStop] = Clicked;
+	if (HAL_GetTick() - g_Keypad.timePressed[KeyStartStop] >= 10){
+		g_Keypad.keystates[KeyStartStop] = Clicked;
+		g_Keypad.timePressed[KeyStartStop] = HAL_GetTick();
+	}
 }
 
 KeyState Keypad_GetState(Keypad* keypad, KeyButtons key) { 
-	if (keypad->keystates[key] == Clicked && HAL_GetTick() - keypad->timePressed[key] >= 10000) {
-		keypad->timePressed[KeyStartStop] = HAL_GetTick();
+	if (keypad->keystates[key] == Clicked) {
 		keypad->keystates[key] = Unpressed;
 		return Clicked;
 	}
